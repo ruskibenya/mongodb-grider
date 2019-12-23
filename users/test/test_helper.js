@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
+
 // es6 implementation of promises
 // not sure that we need it though, wasn't getting deprication in lecture 25
 mongoose.Promise = global.Promise;
