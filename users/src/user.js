@@ -15,7 +15,12 @@ const UserSchema = new Schema({
     },
     // mongoose will infer that this must be a nested sub-document
     posts: [PostSchema],
-    likes: Number
+    likes: Number,
+    // association
+    blogPosts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'blogPost'
+    }]
 });
 
 // adding virtual type on User model
