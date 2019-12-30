@@ -30,6 +30,26 @@ UserSchema.virtual('postCount').get(function() {
     return this.posts.length;
 });
 
+// define middleware
+//  to delete any blogposts that belong to a user, when deleting a user
+// NOT FAT ARROW!
+UserSchema.pre('remove', function(next) {
+    // use mongoose to avoid cyclical loads
+    // don't use require to import a model
+    const BlogPost = mongoose.model('blogPost');
+    // this === joe
+
+
+
+    // use the query operator $in to find all the blogPosts of this instance of User, and delete in one swoop instead of iterating
+    // go through all the BlogPosts, look at their id, and if the id is in the blogPosts that belong to this user, remove
+    BlogPost.remove({ _id: { $in: this.blogPosts }  })
+
+    // because of async nature, could return from removing user before removing all blogpost
+    // so need to tell the middleware to only move onto the next step after getting back from this remove
+    .then(() => next());
+});
+
 // define the user class and connect to user collection
 const User = mongoose.model('user', UserSchema);
 
